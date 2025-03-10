@@ -117,6 +117,12 @@ window.config = {
         supportsFuzzyMatching: true,
         supportsWildcard: true,
         omitQuotationForMultipartRequest: true,
+        requestOptions: {
+          auth: options => {
+            debugger;
+            return `Bearer ${JSON.parse(localStorage.getItem('user')).token}`;
+          },
+        },
         bulkDataURI: {
           enabled: true,
           // This is an example config that can be used to fix the retrieve URL

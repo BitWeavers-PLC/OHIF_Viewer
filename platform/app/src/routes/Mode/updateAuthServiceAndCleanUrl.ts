@@ -9,26 +9,21 @@ export function updateAuthServiceAndCleanUrl(
   location: any,
   userAuthenticationService: any
 ): void {
-  if (!token) {
-    return;
-  }
-
-  // if a token is passed in, set the userAuthenticationService to use it
-  // for the Authorization header for all requests
+  debugger;
+  // Update the service implementation with a custom getAuthorizationHeader function:
   userAuthenticationService.setServiceImplementation({
-    getAuthorizationHeader: () => ({
-      Authorization: 'Bearer ' + token,
-    }),
+    getAuthorizationHeader: () => {
+      debugger; // Pauses execution when this method is called
+      return {
+        Authorization: `Bearer ${token}`,
+      };
+    },
   });
 
-  // Create a URL object with the current location
+  // Optionally, remove the token from the URL to avoid exposing it:
   const urlObj = new URL(window.location.origin + window.location.pathname + location.search);
-
-  // Remove the token from the URL object
   urlObj.searchParams.delete('token');
   const cleanUrl = urlObj.toString();
-
-  // Update the browser's history without the token
   if (window.history && window.history.replaceState) {
     window.history.replaceState(null, '', cleanUrl);
   }

@@ -72,6 +72,27 @@ function App({
     };
 
     run();
+
+    // the following is bit weavers related authentication logic
+    // --------------------------------------------------------- //
+    const handleMessage = event => {
+      if (event.data && event.data.token) {
+        const token = event.data.token;
+        console.log('Received token via postMessage:', token);
+        // Update the User Authentication Service
+        servicesManager.services.userAuthenticationService.setServiceImplementation({
+          getAuthorizationHeader: () => {
+            return {
+              Authorization: `Bearer ${token}`,
+            };
+          },
+        });
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+    // --------------------------------------------------------- //
   }, []);
 
   if (!init) {
